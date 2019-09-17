@@ -626,7 +626,7 @@ def _get_request_time_cdf(total_complete_requests, complete_bees):
     # ab. Can do this by sampling the request_time_cdfs for each of
     # the completed bees in proportion to the number of
     # complete_requests they have
-    n_final_sample = 100
+    n_final_sample = 1000
     sample_size = 100 * n_final_sample
     n_per_bee = [int(r['complete_requests'] / total_complete_requests * sample_size)
                  for r in complete_bees]
@@ -639,6 +639,8 @@ def _get_request_time_cdf(total_complete_requests, complete_bees):
     sample_response_times.sort()
     # python3 division returns floats so convert back to int
     request_time_cdf = sample_response_times[0:sample_size:int(old_div(sample_size, n_final_sample))]
+
+    # print("request time cdf: " + request_time_cdf)
 
     return request_time_cdf
 
@@ -678,8 +680,9 @@ def _print_results(summarized_results):
     if 'tpr_bounds' in summarized_results and summarized_results['tpr_bounds'] is not None:
         print('     Time per request:\t\t%f [ms] (lower bounds)' % summarized_results['tpr_bounds'])
 
-    print('     50%% responses faster than:\t%f [ms]' % summarized_results['request_time_cdf'][49])
-    print('     90%% responses faster than:\t%f [ms]' % summarized_results['request_time_cdf'][89])
+    print('     50%% responses faster than:\t%f [ms]' % summarized_results['request_time_cdf'][499])
+    print('     90%% responses faster than:\t%f [ms]' % summarized_results['request_time_cdf'][899])
+    print('     99.5%% responses faster than:\t%f [ms]' % summarized_results['request_time_cdf'][994])
 
     if 'performance_accepted' in summarized_results:
         print('     Performance check:\t\t%s' % summarized_results['performance_accepted'])
